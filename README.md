@@ -55,9 +55,9 @@ The system supports 3 levels of Role-Based Access Control (RBAC):
     *   Manually add late registrations
 
 ## Tech Stack
+*   **Frontend:** HTML, CSS, JavaScript (Tailwind CSS)
 *   **Backend:** PHP, Laravel Framework, Livewire
 *   **Database:** MySQL
-*   **Frontend:** HTML, CSS, JavaScript (Tailwind CSS)
 
 ## Database Structure
 The system implements a complex Database Schema designed to support specific curriculum requirements, including:
