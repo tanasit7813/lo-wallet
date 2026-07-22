@@ -1,7 +1,11 @@
 ## LO-Wallet (Learning Outcome Wallet)
 
-**Status:** Archived
+**Status:** จัดเก็บถาวร (Archived)
 
+**[TH]**
+*คำชี้แจง: Repository นี้ประกอบด้วย Source Code สำหรับโปรเจกต์ในระดับมหาวิทยาลัย ซึ่งถูกพัฒนาขึ้นเพื่อให้เป็นไปตามข้อกำหนดทางการศึกษาและในปัจจุบันไม่ได้มีการอัปเดตหรือพัฒนาเพิ่มเติมแล้ว*
+
+**[EN]**
 *Disclaimer: This repository contains the source code for my university project. It was developed to meet specific academic requirements and is currently no longer actively maintained.*
 
 ## เกี่ยวกับโปรเจกต์ (About The Project)
