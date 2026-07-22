@@ -1,6 +1,6 @@
 ## LO-Wallet (Learning Outcome Wallet)
 
-**Status:** (Archived)
+**Status:** Archived
 
 *Disclaimer: This repository contains the source code for my university project. It was developed to meet specific academic requirements and is currently no longer actively maintained.*
 
