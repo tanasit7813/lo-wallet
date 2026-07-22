@@ -17,13 +17,11 @@ The system supports 3 levels of Role-Based Access Control (RBAC):
     *   Track course registration history
     *   Download "My Certificates"
     *   Check learning outcomes progression via the "LO-Wallet" menu
-
 *   **Instructor** 
     *   Add and edit course information
     *   View the list of all registered users
     *   View the list of users who successfully completed the course
     *   Manually add late registrations
-
 *   **Officer** 
     *   View the lists of registered users and course completers
     *   Issue e-Certificates to qualified users
