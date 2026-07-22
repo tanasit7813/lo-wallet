@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certificate</title>
+    {{-- เราต้องใช้ Tailwind CSS แบบ CDN หรือ build เป็นไฟล์ CSS แยก เพื่อให้ Browsershot อ่านเจอ --}}
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    {{-- ========== เพิ่มส่วนนี้เข้าไป ========== --}}
+    <style>
+        .force-white {
+            color: white !important;
+        }
+    </style>
+    {{-- =================================== --}}
+</head>
+
+<body>
+    {{-- โค้ดส่วนนี้คัดลอกมาจาก view-certificate.blade.php --}}
+    <div>
+        @if ($logoOption === 'with_logo')
+            <div class="relative w-full" style="aspect-ratio: 4/3;">
+                {{-- เปลี่ยน asset() เป็น public_path() หรือ base64 encode เพื่อให้ PDF หาไฟล์เจอ --}}
+                <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('img/withlogo.png'))) }}"
+                    alt="Logo" class="absolute inset-0 w-full h-full object-contain">
+                <div class="absolute inset-0 flex items-center justify-center" style="top: 40%; height: 9%;">
+                    <p class="font-bold text-center px-2 leading-tight force-white"
+                        style="font-size: clamp(0.8rem, 2.5vw, 2.5rem); text-shadow: 2px 2px 4px rgba(0,0,0,0.5); ">
+                        {{ $userName ?? 'ไม่ระบุ' }}
+                    </p>
+                </div>
+                <div class="absolute inset-0 flex items-center justify-center" style="top: 53%; height: 12%;">
+                    <p class="font-bold text-gray-800 text-center px-2 leading-tight">
+                        @php
+                            // ... (ส่วน PHP ที่เตรียมข้อมูลเหมือนเดิม) ...
+                            $courseTitle = $certificate->course->title ?? 'ไม่ระบุ';
+                            if (preg_match('/^(.*?)\s*\(([^)]+)\)$/', $courseTitle, $matches)) {
+                                $mainTitle = trim($matches[1]);
+                                $subTitle = trim($matches[2]);
+                            } else {
+                                $mainTitle = $courseTitle;
+                                $subTitle = '';
+                            }
+                            $thaiMonths = [
+                                1 => 'มกราคม',
+                                2 => 'กุมภาพันธ์',
+                                3 => 'มีนาคม',
+                                4 => 'เมษายน',
+                                5 => 'พฤษภาคม',
+                                6 => 'มิถุนายน',
+                                7 => 'กรกฎาคม',
+                                8 => 'สิงหาคม',
+                                9 => 'กันยายน',
+                                10 => 'ตุลาคม',
+                                11 => 'พฤศจิกายน',
+                                12 => 'ธันวาคม',
+                            ];
+                            $formattedDate = $certificate->requested_at
+                                ? $certificate->requested_at->format('d') .
+                                    ' ' .
+                                    $thaiMonths[$certificate->requested_at->month] .
+                                    ' ' .
+                                    ($certificate->requested_at->year + 543)
+                                : 'ไม่ระบุ';
+                            $directorName = $director ? $director->name : 'ไม่ระบุ';
+                            $directorPosition = '';
+                            if ($director && preg_match('/^(.*?)\s*\(([^)]+)\)$/', $director->name, $matches)) {
+                                $directorName = trim($matches[1]);
+                                $directorPosition = trim($matches[2]);
+                            } elseif ($director && $director->position) {
+                                $directorPosition = $director->position;
+                            }
+                        @endphp
+                        <span class="block sm:mt-1"
+                            style="font-size: clamp(0.6rem, 1.8vw, 1.5rem); text-shadow: 1px 1px 2px rgba(255,255,255,0.8);">
+                            ได้ผ่านการอบรม {{ $mainTitle }}
+                        </span>
+                        @if ($subTitle)
+                            <span class="block sm:mt-1"
+                                style="font-size: clamp(0.6rem, 1.8vw, 1.5rem); text-shadow: 1px 1px 2px rgba(255,255,255,0.8);">
+                                ({{ $subTitle }})
+                            </span>
+                        @endif
+                        <span class="block mt-2 sm:mt-10"
+                            style="font-size: clamp(0.6rem, 1.8vw, 1.5rem); text-shadow: 1px 1px 2px rgba(255,255,255,0.8);">
+                            ออกให้ ณ วันที่ {{ $formattedDate }}
+                        </span>
+                    </p>
+                </div>
+                @if ($director)
+                    <div class="absolute inset-0 flex items-center justify-center" style="top: 70%; height: 5%;">
+                        <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('img/PKRU1.png'))) }}"
+                            alt="Director Signature"
+                            class="block mx-auto max-w-[36vw] max-h-[6vh] sm:max-w-[36vw] sm:max-h-[8vh] object-contain">
+                    </div>
+                    <div class="absolute inset-0 flex items-center justify-center" style="top: 80%; height: 10%;">
+                        <p class="font-bold text-gray-800 text-center px-2 leading-tight">
+                            <span class="block sm:mt-1"
+                                style="font-size: clamp(0.5rem, 1.5vw, 1.2rem); text-shadow: 1px 1px 2px rgba(255,255,255,0.8);">
+                                {{ $directorName }}
+                            </span>
+                            @if ($directorPosition)
+                                <span class="block sm:mt-1"
+                                    style="font-size: clamp(0.5rem, 1.5vw, 1.2rem); text-shadow: 1px 1px 2px rgba(255,255,255,0.8);">
+                                    ({{ $directorPosition }})
+                                </span>
+                            @endif
+                        </p>
+                    </div>
+                @endif
+            </div>
+        @elseif ($logoOption === 'without_logo')
+            <div class="relative w-full" style="aspect-ratio: 4/3;">
+                <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('img/withoutlogo.png'))) }}"
+                    alt="Certificate without logo" class="absolute inset-0 w-full h-full object-contain">
+                <div class="absolute inset-0 flex items-center justify-center" style="top: 40%; height: 9%;">
+                    <p class="font-bold text-center px-2 leading-tight force-white"
+                        style="font-size: clamp(0.8rem, 2.5vw, 2.5rem); text-shadow: 2px 2px 4px rgba(0,0,0,0.5); ">
+                        {{ $userName ?? 'ไม่ระบุ' }}
+                    </p>
+                </div>
+                <div class="absolute inset-0 flex items-center justify-center" style="top: 53%; height: 12%;">
+                    <p class="font-bold text-gray-800 text-center px-2 leading-tight">
+                        @php
+                            $courseTitle = $certificate->course->title ?? 'ไม่ระบุ';
+                            if (preg_match('/^(.*?)\s*\(([^)]+)\)$/', $courseTitle, $matches)) {
+                                $mainTitle = trim($matches[1]);
+                                $subTitle = trim($matches[2]);
+                            } else {
+                                $mainTitle = $courseTitle;
+                                $subTitle = '';
+                            }
+                            $thaiMonths = [
+                                1 => 'มกราคม',
+                                2 => 'กุมภาพันธ์',
+                                3 => 'มีนาคม',
+                                4 => 'เมษายน',
+                                5 => 'พฤษภาคม',
+                                6 => 'มิถุนายน',
+                                7 => 'กรกฎาคม',
+                                8 => 'สิงหาคม',
+                                9 => 'กันยายน',
+                                10 => 'ตุลาคม',
+                                11 => 'พฤศจิกายน',
+                                12 => 'ธันวาคม',
+                            ];
+                            $formattedDate = $certificate->requested_at
+                                ? $certificate->requested_at->format('d') .
+                                    ' ' .
+                                    $thaiMonths[$certificate->requested_at->month] .
+                                    ' ' .
+                                    ($certificate->requested_at->year + 543)
+                                : 'ไม่ระบุ';
+                            $directorName = $director ? $director->name : 'ไม่ระบุ';
+                            $directorPosition = '';
+                            if ($director && preg_match('/^(.*?)\s*\(([^)]+)\)$/', $director->name, $matches)) {
+                                $directorName = trim($matches[1]);
+                                $directorPosition = trim($matches[2]);
+                            } elseif ($director && $director->position) {
+                                $directorPosition = $director->position;
+                            }
+                        @endphp
+                        <span class="block sm:mt-1"
+                            style="font-size: clamp(0.6rem, 1.8vw, 1.5rem); text-shadow: 1px 1px 2px rgba(255,255,255,0.8);">
+                            ได้ผ่านการอบรม {{ $mainTitle }}
+                        </span>
+                        @if ($subTitle)
+                            <span class="block sm:mt-1"
+                                style="font-size: clamp(0.6rem, 1.8vw, 1.5rem); text-shadow: 1px 1px 2px rgba(255,255,255,0.8);">
+                                ({{ $subTitle }})
+                            </span>
+                        @endif
+                        <span class="block mt-2 sm:mt-10"
+                            style="font-size: clamp(0.6rem, 1.8vw, 1.5rem); text-shadow: 1px 1px 2px rgba(255,255,255,0.8);">
+                            ออกให้ ณ วันที่ {{ $formattedDate }}
+                        </span>
+                    </p>
+                </div>
+                @if ($director)
+                    <div class="absolute inset-0 flex items-center justify-center" style="top: 70%; height: 5%;">
+                        <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('img/PKRU1.png'))) }}"
+                            alt="Director Signature"
+                            class="block mx-auto max-w-[36vw] max-h-[6vh] sm:max-w-[36vw] sm:max-h-[8vh] object-contain">
+                    </div>
+                    <div class="absolute inset-0 flex items-center justify-center" style="top: 80%; height: 10%;">
+                        <p class="font-bold text-gray-800 text-center px-2 leading-tight">
+                            <span class="block sm:mt-1"
+                                style="font-size: clamp(0.5rem, 1.5vw, 1.2rem); text-shadow: 1px 1px 2px rgba(255,255,255,0.8);">
+                                {{ $directorName }}
+                            </span>
+                            @if ($directorPosition)
+                                <span class="block sm:mt-1"
+                                    style="font-size: clamp(0.5rem, 1.5vw, 1.2rem); text-shadow: 1px 1px 2px rgba(255,255,255,0.8);">
+                                    ({{ $directorPosition }})
+                                </span>
+                            @endif
+                        </p>
+                    </div>
+                @endif
+            </div>
+        @endif
+    </div>
+</body>
+
+</html>
